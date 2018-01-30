@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="OrderWidget">
+        <t t-jquery=".subtotal_n" t-operation="before">
+            <div class="baseIVA0">
+                <span class='name_s'>Base IVA 0%:</span>
+                <!--<div class="spacer"></div>-->
+                <span class="value_s">0.00€</span>
+            </div>
+            <div class="baseIVA12">
+                <span class='name_s'>Base IVA 12%:</span>
+                <!--<div class="spacer"></div>-->
+                <span class="value_s">0.00€</span>
+            </div>
+        </t>
+    </t>
+</templates>

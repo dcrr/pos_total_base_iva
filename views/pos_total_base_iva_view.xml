@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="pos_taxes_form" model="ir.ui.view">
+            <field name="name">account.taxes.form.pos</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='child_depend']" position="after">
+                  <field name="is_iva" string="Is IVA?"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="pos_taxes_tree" model="ir.ui.view">
+            <field name="name">account.taxes.tree.pos</field>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <tree string="Taxes">
+                    <field name="id" />
+                    <field name="name" />
+                    <field name="include_base_amount" />
+                    <field name="is_iva" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_pos_tax">
+            <field name="name">Taxes</field>
+            <field name="res_model">account.tax</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Taxes" parent="point_of_sale.menu_point_config_product" id="menu_taxes" action="action_pos_tax"/>
+    </data>
+</openerp>

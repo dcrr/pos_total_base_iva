@@ -1,0 +1,11 @@
+
+.baseIVA0 .name_s {float: left  }
+.baseIVA0 .value_s {float: right }
+.baseIVA12 .name_s {float: left }
+.baseIVA12 .value_s {float: right }
+
+.spacer {
+    display: inline-block;
+    width: 10px;
+}
+
