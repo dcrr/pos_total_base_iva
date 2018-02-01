@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-extend="OrderWidget">
-        <t t-jquery=".subtotal_n" t-operation="before">
-            <div class="baseIVA0">
-                <span class='name_s'>Base IVA 0%:</span>
-                <!--<div class="spacer"></div>-->
-                <span class="value_s">0.00€</span>
-            </div>
-            <div class="baseIVA12">
-                <span class='name_s'>Base IVA 12%:</span>
-                <!--<div class="spacer"></div>-->
-                <span class="value_s">0.00€</span>
+        <t t-jquery=".entry" t-operation="replace">
+            <div class='base_iva'>
+                <div class="baseIVA0">
+                    <span class="label">Base iva 0%: </span><span class="value">0.00€</span>
+                </div>
+                <div class="baseIVA12">
+                    <span class="label">Base iva 12%: </span><span class="value">0.00€</span>
+                </div>
+                <div class='subentry'>
+                    <span class="label">Taxes: </span><span class="value">0.00€</span>
+                </div>
+                <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
+                     <div class='total'>Total: <span class="value">0.00 €</span></div>
+                </div>
+                <div class='oe_hidden'>
+                    <div class='entry total'>
+                        <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                        <span class="label">Total: </span> <span class="value">0.00 €</span>
+                    </div>
+                </div>
             </div>
         </t>
     </t>

@@ -1,11 +1,31 @@
-
-.baseIVA0 .name_s {float: left  }
-.baseIVA0 .value_s {float: right }
-.baseIVA12 .name_s {float: left }
-.baseIVA12 .value_s {float: right }
-
-.spacer {
-    display: inline-block;
-    width: 10px;
+.base_iva{
+font-size: 14px;
+text-align: right;
+font-weight: normal;
+width: 100%;
 }
 
+.baseIVA0 .label{float: left}
+.baseIVA0 .value{float: right}
+.baseIVA12 .label{float: left}
+.baseIVA12 .value{float: right}
+.subentry .label{float: left}
+.subentry .value{float: right}
+
+.base_iva .line {
+left: 15px;
+text-align: right;
+font-weight: bold;
+position: relative;
+width: 100%;
+bottom: -5px;
+}
+
+.base_iva .line.empty {
+left: 15px;
+font-size: 16px;
+text-align: right;
+font-weight: bold;
+position: relative;
+width: 100%;
+}

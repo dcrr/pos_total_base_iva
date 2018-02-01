@@ -19,7 +19,7 @@
                 <tree string="Taxes">
                     <field name="id" />
                     <field name="name" />
-                    <field name="include_base_amount" />
+                    <field name="price_include" />
                     <field name="is_iva" />
                 </tree>
             </field>

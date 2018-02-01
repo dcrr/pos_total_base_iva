@@ -1,3 +1,4 @@
+//function pos_total_base_iva_widgets(instance, module){
 openerp.pos_total_base_iva = function(instance){
  var module   = instance.point_of_sale;
  var QWeb = instance.web.qweb;
@@ -39,20 +40,26 @@ module.OrderWidget.include({
     update_summary: function() {
         this._super();
         var order = this.pos.get('selectedOrder');
-        var baseRateIVA0 = order ? order.getTotalBaseWithoutIva() : 0;
-        var baseRateIVA12 = order ? order.getTotalBaseWithIva() : 0;
+        var baseRateIVA0 = order ? order.getTotalBaseIVA0() : 0;
+        var baseRateIVA12 = order ? order.getTotalBaseIVA12() : 0;
+        var total = order ? order.getTotalTaxIncluded() : 0;
+        var taxes = order ? total - order.getTotalTaxExcluded() : 0;
 
-        this.el.querySelector('.summary .show_disc .baseIVA0 > .value_s').textContent = this.format_currency(baseRateIVA0);
-        this.el.querySelector('.summary .show_disc .baseIVA12 > .value_s').textContent = this.format_currency(baseRateIVA12);
+        this.el.querySelector('.summary .base_iva .baseIVA0 > .value').textContent = this.format_currency(baseRateIVA0);
+        this.el.querySelector('.summary .base_iva .baseIVA12 > .value').textContent = this.format_currency(baseRateIVA12);
+        this.el.querySelector('.summary .base_iva .subentry .value').textContent = this.format_currency(taxes);
+        this.el.querySelector('.summary .base_iva .total .value').textContent = this.format_currency(total);
         },
  });
 
 module.Orderline = module.Orderline.extend({
 
     get_all_total_base_iva: function(){
-        var baseWithoutDiscount = round_pr(this.get_quantity() * this.get_unit_price(), this.pos.currency.rounding);
-        var baseWithoutIVA = 0;
-        var baseWithIVA = 0;
+        // You get the price of product including the discount
+        var price = round_pr(this.get_quantity() * this.get_unit_price() * (1.0 - (this.get_discount() / 100.0)),
+                             this.pos.currency.rounding);
+        var baseIVA0 = 0;
+        var baseIVA12 = 0;
 
         var product =  this.get_product();
         var taxes_ids = product.taxes_id;
@@ -60,49 +67,46 @@ module.Orderline = module.Orderline.extend({
         var product_taxes = [];
 
         if (taxes_ids==0)
-            baseWithoutIVA = baseWithoutDiscount;
+        // if the product has no taxes, the price is the baseIVA0 value
+            baseIVA0 = price;
 
         _(taxes_ids).each(function(el){
+        // the product taxes are get on product_taxes
             product_taxes.push(_.detect(taxes, function(t){
                 return t.id === el;
             }));
         });
 
         _(product_taxes).each(function(el){
-            if(el.is_iva)
-            {
-                if(el.amount==0.12)
-                {
-                    if (el.price_include)
-                        baseWithIVA = baseWithoutDiscount -(this.get_unit_price()*el.amount);
-                    else
-                        baseWithIVA = baseWithoutDiscount;
-                }
-                else
-                {
-                    if(el.amount==0.00)
-                        baseWithoutIVA = baseWithoutDiscount;
-                }
-            }
+             // if the tax is included in the product price, the price is calculate without tax
+            if (el.price_include)
+                price = price/(1 + el.amount);
+
+            if(el.is_iva && el.amount==0.12)
+            // if the tax is IVA and its value is 0.12, the price is the baseIVA12
+                baseIVA12 = price
+            else
+            // else, the price is the baseIVA0
+                baseIVA0 = price;
         });
 
         return {
-            "baseWithoutIVA": baseWithoutIVA,
-            "baseWithIVA": baseWithIVA,
+            "baseIVA0": baseIVA0,
+            "baseIVA12": baseIVA12,
         };
     },
 });
 
 module.Order = module.Order.extend({
-    getTotalBaseWithoutIva: function() {
+    getTotalBaseIVA0: function() {
         return round_pr((this.get('orderLines')).reduce((function(sum, orderLine) {
-            return sum + orderLine.get_all_total_base_iva().baseWithoutIVA;
+            return sum + orderLine.get_all_total_base_iva().baseIVA0;
         }), 0), this.pos.currency.rounding);
     },
 
-    getTotalBaseWithIva: function() {
+    getTotalBaseIVA12: function() {
         return round_pr((this.get('orderLines')).reduce((function(sum, orderLine) {
-            return sum + orderLine.get_all_total_base_iva().baseWithIVA;
+            return sum + orderLine.get_all_total_base_iva().baseIVA12;
         }), 0), this.pos.currency.rounding);
     },
 });
