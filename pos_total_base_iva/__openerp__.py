@@ -40,6 +40,7 @@
     'data': ['views/pos_total_base_iva_view.xml',
              'templates.xml',
             ],
+    'images': ['images/cover_page.jpg'],
     'qweb':['static/src/xml/total_base_iva.xml'],
     'installable': True,
     'auto_install': False,
