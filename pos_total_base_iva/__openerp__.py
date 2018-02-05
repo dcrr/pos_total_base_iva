@@ -24,7 +24,7 @@
 
     'description': """
         This module adds, in the point of sale session, the total consumed of
-        the products with IVA base equal to 0% and base IVA greater than 0% 
+        the products with IVA base equal to 0% and equal to 12% 
     """,
 
     'author': "Diana Rojas",
